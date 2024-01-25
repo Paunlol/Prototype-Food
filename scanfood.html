@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/x-icon" href="/img/LoGo_KinRaiD 1.png">
+    <title>Scan Food</title>
+
+    <!-- icon -->
+    <script src="https://kit.fontawesome.com/cefd25e2a1.js" crossorigin="anonymous"></script>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Scan -->
+    <script src="js/firebase.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+
+</head>
+
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-warning sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand -->
+            <a class="pt-4  d-flex align-items-center justify-content-center" href="index.html">
+                <div class="sidebar-brand-icon text-center">
+                    <img src="/img/LoGo_KinRaiD 1.png" class="rounded-top" alt="" width="xs"
+                        style="width: 50%; height: auto;">
+                    <!-- <img src="/img/LoGo_KinRaiD 1.png" alt="" width="100%"> -->
+                </div>
+            </a>
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item ">
+                <a class="nav-link" href="home.html">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Home</span></a>
+            </li>
+            <li class="nav-item  ">
+                <a class="nav-link" href="updateBMI.html">
+                    <i class="fa-brands fa-intercom"></i>
+                    <span>Update BMI</span></a>
+            </li>
+            <li class="nav-item active ">
+                <a class="nav-link" href="scanfood.html">
+                    <i class="fa-solid fa-camera"></i>
+                    <span>Scan Food</span></a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link" href="profile.html">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Profile</span></a>
+            </li>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                <nav class="navbar bg-gradient-warning-90 navbar-expand navbar-light topbar mb-4  static-top shadow">
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn  btn-link d-md-none rounded-circle mr-3 text-black-50">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                        <!-- Nav Item - Alerts -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="alertsDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bell fa-fw"></i>
+                                <!-- Counter - Alerts -->
+                                <span class="badge badge-danger badge-counter">3+</span>
+                            </a>
+                            <!-- Dropdown - Alerts -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="alertsDropdown">
+                                <h6 class="dropdown-header">
+                                    Alerts Center
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-primary">
+                                            <i class="fas fa-file-alt text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 12, 2019</div>
+                                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-success">
+                                            <i class="fas fa-donate text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 7, 2019</div>
+                                        $290.29 has been deposited into your account!
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-warning">
+                                            <i class="fas fa-exclamation-triangle text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 2, 2019</div>
+                                        Spending Alert: We've noticed unusually high spending for your account.
+                                    </div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                            </div>
+                        </li>
+
+                        <!-- Nav Item - Messages -->
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Activity Log
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <!-- Content Row -->
+                    <div class="row">
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-6 col-md-12 mb-4">
+                            <div class="card shadow h-100 ">
+                                <div class="card-header py-1">
+                                    <div class="m-0 h6 font-weight-bold text-primary py-3"><i
+                                            class="pr-1 fa-solid fa-image"></i></i>Choose your Image
+                                    </div>
+                                </div>
+                                <div class="row card-body   ">
+                                    <div class="col-12 pt-2">
+                                        <div id="image-container" class="text-center py-3">
+                                            <img id="image-preview" src="img/image black.png"
+                                                class="img-fluid rounded-top" width="50%" alt="" /><br><input disabled
+                                                type="file" accept="image/*" id="input-file">
+                                        </div>
+                                        <div class="upload-btn-wrapper text-center">
+
+                                        </div>
+                                        <div class="text-center py-3 h5" style="border-radius: 10%; ">
+                                            <span id="Accurate"></span><span id="Result"></span> <span
+                                                id="Precent"></span>
+                                        </div>
+                                        <div class="condition mt-2"
+                                            style="border-radius: 1rem; background-color: #FAFAB4; width:fit-content; height: fit-content;">
+                                            <div class="text-dark p-3">
+                                                <div class="text-uppercase"><b>condition</b></div>
+
+                                                Food nutrition information comes from users. Its purpose is to calculate
+                                                calories and control weight for individuals only. Cannot be used as a
+                                                medical reference
+
+                                                <b class="text-uppercase">Cannot be used as a medical reference</b>
+                                                <div class="text-uppercase"><b>*note</b></div>
+
+                                                Percentage of recommended nutrient intake per day for Thai people aged 6
+                                                and over.
+                                                Years or more, based on a daily energy demand of 2,000 kilos.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-md-12 mb-4">
+                            <div class="card shadow h-auto ">
+                                <div class="card-header py-1">
+                                    <div class="m-0 h6 font-weight-bold text-primary py-3"><i
+                                            class="pr-1 fa-solid fa-circle-info"></i></i>Nutrition information
+                                    </div>
+                                </div>
+                                <div class="row card-body text-left ">
+                                    <div class="col-12 pt-2">
+                                        <div class="h5">Menu Name : <span class="text-uppercase" id="namemenu">"plase
+                                                upload image"</span>
+                                        </div>
+                                        <!-- <div class="h5">หน่วยบริโภค : <select id="foodSelection"></select> </div> -->
+                                        <div class="h5 ">Total Energy : <input class="w-auto"
+                                                style="border-radius: 10rem; padding: 0.5rem; background-color: rgb(231, 247, 187); font: 1em sans-serif; text-align: right;"
+                                                disabled type="text" name="" id="totlakcal" value="kcal"> </div>
+                                        <div class=" h5">Fat : <span><input class="w-auto"
+                                                    style="border-radius: 10rem; padding: 0.5rem; background-color: rgb(247, 246, 187); font: 1em sans-serif; text-align: right;""
+                                                    disabled type=" text" name="" id="totlafat" value="g"> </span>
+                                        </div>
+                                        <div class="h5">Carbohydrate : <span><input class="w-auto"
+                                                    style="border-radius: 10rem; padding: 0.5rem; background-color: rgb(255, 234, 234); font: 1em sans-serif; text-align: right;""
+                                                    disabled type=" text" name="" id="totlacarb" value="g"> </span>
+                                        </div>
+                                        <div class="h5">Protein : <span><input class="w-auto"
+                                                    style="border-radius: 10rem; padding: 0.5rem; background-color: rgb(197, 246, 255); font: 1em sans-serif; text-align: right;""
+                                                    disabled type=" text" name="" id="totlaprotein" value="g"> </span>
+                                        </div>
+                                        <div class="h5">
+                                            <div class="row pl-3">
+                                                <div class="col-4-sm col-2-md">Meal Time :</div>
+                                                <div class="col-8-sm col-10-md">
+                                                    <div class="form-check h5 form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="inlineRadioOptions" id="breakfast-time"
+                                                            value="option1">
+                                                        <span class="form-check-label"
+                                                            for="inlineRadio1">Breakfast</span>
+                                                    </div>
+                                                    <div class="form-check h5 form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="inlineRadioOptions" id="lunch-time" value="option2">
+                                                        <span class="form-check-label" for="inlineRadio2">Lunch</span>
+                                                    </div>
+                                                    <div class="form-check h5 form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="inlineRadioOptions" id="dinner-time" value="option3">
+                                                        <span class="form-check-label" for="inlineRadio3">Dinner</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <!-- <div class="col-md-4 col-sm-12 text-center mt-2 ">
+                                            <button class="btn btn-primary btn-lg text-center w-100"
+                                                onclick="calculateBMI()">Crate Your Menu</button>
+                                        </div> -->
+                                    <!-- <div class="col-md-6 col-sm-12 text-center mt-2 ">
+                                        <button class="w-100 btn btn-warning btn-lg text-center"
+                                            onclick="calculateBMI()">Edit
+                                            Menu</button>
+                                    </div> -->
+                                    <div class="col-md-12 col-sm-12 text-center mt-2 ">
+                                        <button id="add-food" class="w-100 btn btn-success btn-lg text-center">Save
+                                            Menu</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>Copyright &copy; Your Website 2021</span>
+            </div>
+        </div>
+    </footer>
+    <!-- End of Footer -->
+    </div>
+
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeBtn">&times;</span>
+                <p>Are you sure you want to save the menu?</p>
+                <button id="confirmSaveBtn">Confirm</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="module">
+        const button_addfood = document.getElementById('add-food');
+        const foodAll = JSON.parse(localStorage.getItem('foodall'));
+        const user = JSON.parse(localStorage.getItem('userList'));
+        console.log("foodAll", foodAll);
+        console.log("user", user);
+        document.addEventListener('DOMContentLoaded', async () => {
+            await init()
+            await enableInput()
+            console.log('Page is ready to use!');
+            // ทำสิ่งที่คุณต้องการทำหลังจากเว็บพร้อมใช้งาน
+        });
+        function enableInput() {
+            // เปลี่ยนค่า disabled เป็น false
+            document.getElementById('input-file').disabled = false;
+        }
+        async function init() {
+            // เลือกไฟล์รูปภาพ
+            const inputElement = document.getElementById('input-file');
+            // console.log("inputElement", inputElement);
+            // เรียกใช้ Teachable Machine model
+            const URL = 'https://teachablemachine.withgoogle.com/models/tz989cxYn/';
+            const model = await tmImage.load(URL + 'model.json', URL + 'metadata.json');
+            console.log("เรียกใช้ Teachable Machine model");
+
+            // ให้ผู้ใช้เลือกรูปภาพเมื่อคลิกที่ไฟล์
+            inputElement.addEventListener('change', handleImageUpload);
+
+            async function handleImageUpload() {
+                // console.log("asdasdasdasdasdasd");
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = async function (e) {
+                        const image = new Image();
+                        image.src = e.target.result;
+                        const imagePreview = image.src
+                        // console.log("imagePreview", imagePreview);
+                        // console.log("image.src", image.src);
+                        image.onload = async function () {
+                            const prediction = await model.predict(image);
+                            // console.log("prediction", prediction); //ค่า predi ยังคงเป็นค่าคำสั่ง
+                            displayResult(prediction, imagePreview);
+                        };
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+        async function displayResult(predictions, imagePreview) {
+            let classNames = [];
+            let probabilities = [];
+            let items = [];
+            let resultfood = []
+            let options = [
+                { value: '1', text: 'Option 1' },
+                { value: '2', text: 'Option 2' },
+                { value: '3', text: 'Option 3' }
+            ];
+            const image = document.getElementById('image-preview');
+            if (imagePreview) {
+                image.src = imagePreview
+            }
+
+            // แสดงผลลัพธ์ทั้ง 10 อาหาร
+            predictions.forEach(z => {
+                const className = z.className;
+                const probability = (z.probability * 100).toFixed(2);
+                classNames.push(className);
+                probabilities.push(probability);
+            });
+
+            if (classNames && probabilities !== "" || null) {
+                for (let i = 0; i < classNames.length; i++) {
+                    const item = {
+                        name: classNames[i],
+                        rate: probabilities[i]
+                    };
+                    items.push(item);
+                }
+                items.sort((a, b) => parseFloat(b.rate) - parseFloat(a.rate));
+                // console.log(items);
+                resultfood = items[0]
+                // console.log("resultfood", resultfood);
+                getColor(items[0].rate)
+                const newItems = items.map((item) => {
+                    // console.log("itemasd",item);
+                    let thainame;
+                    const matchingFood = foodAll.find((food) => food.name === item.name);
+                    if (item.name === "crispy pork rice") {
+                        thainame = "ข้าวหมูกรอบ"
+                    } else if (item.name === "fried rice") {
+                        thainame = "ข้าวผัดหมู"
+                    }
+                    else if (item.name === "garlic pork rice") {
+                        thainame = "ข้าวหมูกระเทียม"
+                    }
+                    else if (item.name === "namtok noodles") {
+                        thainame = "ก๋วยเตี๋ยวน้ำตก"
+                    }
+                    else if (item.name === "omelet rice") {
+                        thainame = "ข้าวไข่เจียว"
+                    }
+                    else if (item.name === "papaya salad") {
+                        thainame = "ส้มตำ"
+                    }
+                    else if (item.name === "pork basil egg") {
+                        thainame = "ข้าวกะเพราหมูไข่ดาว"
+                    }
+                    else if (item.name === "pork leg rice") {
+                        thainame = "ข้าวขาหมู"
+                    }
+                    else if (item.name === "rice mixed") {
+                        thainame = "ข้าวคุกกระปิ"
+                    }
+                    else if (item.name === "tom yum noodles") {
+                        thainame = "ก๋วยเตี๋ยวต้มยำ"
+                    }
+                    if (matchingFood) {
+                        return { item, matchingFood, thainame };
+                    } else
+                        return null;
+                });
+                foodtext(newItems)
+                saveMenu(newItems[0].matchingFood);
+                // console.log(newItems);
+            } else {
+                console.log("No classNames or probabilities");
+            }
+            async function foodtext(foodlist) {
+                let name_menu = document.getElementById('namemenu');
+                let totla_kcal = document.getElementById('totlakcal');
+                let totla_fat = document.getElementById('totlafat');
+                let totla_carb = document.getElementById('totlacarb');
+                let totla_protein = document.getElementById('totlaprotein');
+                console.log("foodlist", foodlist);
+                name_menu.innerHTML = `${foodlist[0].thainame}`
+                totla_kcal.value = `${foodlist[0].matchingFood.kcal} kcal`
+                totla_fat.value = `${foodlist[0].matchingFood.fat} g`
+                totla_carb.value = `${foodlist[0].matchingFood.carb} g`
+                totla_protein.value = `${foodlist[0].matchingFood.protein} g`
+            }
+        }
+        async function getColor(probability) {
+            console.log("probability", probability);
+            let accurate = document.getElementById('Accurate');
+            let precent = document.getElementById('Precent');
+            let result = document.getElementById('Result');
+            // ปรับสีตามความน่าจะเป็น
+            const red = 255 * (1 - probability / 100);
+            const green = 255 * (probability / 100);
+            let text = probability
+            let color = `rgb(${red}, ${green}, 0)`
+            accurate.innerHTML = `Accurate `
+            precent.innerHTML = `%`
+            result.innerHTML = text;
+            result.style.color = color;
+            // resultHTML.style.backgroundColor = color;
+        }
+        async function saveMenu(food) {
+            alert("saved successfully")
+            // addfood = food
+            console.log("addfood");
+        }
+
+    </script>
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+    <!-- Page level plugins -->
+    <!-- <script src="vendor/chart.js/Chart.min.js"></script> -->
+
+    <!-- Page level custom scripts -->
+    <!-- <script src="js/demo/chart-area-demo.js"></script>
+        <script src="js/demo/chart-pie-demo.js"></script> -->
+
+</body>
+
+</html>
