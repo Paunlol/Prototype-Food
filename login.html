@@ -2,15 +2,14 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" type="image/x-icon" href="/img/LoGo_KinRaiD 1.png">
-    <title>SB Admin 2 - Login</title>
-
+    <title>Login</title>
+    <script src="js/firebase.js" type="module"></script>
     <!-- Custom fonts for this template-->
     <script src="https://kit.fontawesome.com/cefd25e2a1.js" crossorigin="anonymous"></script>
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -24,7 +23,6 @@
 </head>
 
 <body class="bg-gradient-warning">
-
     <div class="container">
         <div class="text-center pt-5 d-block d-lg-none">
             <img src="img/LoGo_KinRaiD 1.png" class="img-fluid rounded-top" width="50%"><br>
@@ -80,13 +78,12 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
+    <script type="module">
+        import { getFoods } from '/js/firebase.js'
+    </script>
 
 </body>
 
