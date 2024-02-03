@@ -10,7 +10,6 @@
     <meta name="author" content="">
     <link rel="icon" type="image/x-icon" href="/img/LoGo_KinRaiD 1.png">
     <title>Register</title>
-    <script src="js/firebase.js" type="module"></script>
     <!-- Custom fonts for this template-->
     <script src="https://kit.fontawesome.com/cefd25e2a1.js" crossorigin="anonymous"></script>
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -37,7 +36,7 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">create your Account!</h1>
                             </div>
-                            <form class="user">
+                            <form id="MainForm" class="user">
                                 <div class="form-group ">
                                     <div class="mb-3 mb-sm-0">
                                         <input id="username" type="text" class="form-control form-control-user"
@@ -59,9 +58,9 @@
                                             id="confirm-password" placeholder="Confirm Password">
                                     </div>
                                 </div>
-                                <a id="submit" class="btn btn-success btn-user btn-block">
+                                <button id="submit" type="submit" class="btn btn-success btn-user btn-block">
                                     Register Account
-                                </a>
+                                </button>
                             </form>
                             <hr>
                             <div class="text-center">
@@ -77,69 +76,49 @@
         </div>
 
     </div>
-
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        document.getElementById('submit').addEventListener('click', function () {
-            submit();
-        });
-        function isValidEmail(email) {
-            // กำหนดรูปแบบของอีเมล
-            const emailPattern = /\S+@\S+\.\S+/;
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, set, ref } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJMwXm9sPITs4vL8VcQl6sb6eqQbuvzuM",
+            authDomain: "kinraidee-32dc4.firebaseapp.com",
+            projectId: "kinraidee-32dc4",
+            storageBucket: "kinraidee-32dc4.appspot.com",
+            messagingSenderId: "595736427785",
+            appId: "1:595736427785:web:9f6043cfecd63e4db567d8",
+            measurementId: "G-7TJY5YJDVF"
+        };
 
-            // ทำการตรวจสอบรูปแบบ
-            return emailPattern.test(email);
-        }
-        function submit() {
-            let postdata = {
-                username: null,
-                email: null,
-                password: null,
-            }
-            let i = 0
-            const username = document.getElementById('username')
-            const email = document.getElementById('e-mail')
-            const passWord = document.getElementById('password')
-            const cofipassWord = document.getElementById('confirm-password')
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        const auth = getAuth(app);
 
-            if (username.value !== "") {
-                console.log("username yes");
-                i++
-            } else {
-                alert("Username ไม่ถูกต้อง")
-            }
-            if (email.value !== "" && isValidEmail(email.value)) {
-                console.log("Email yes");
-                i++
-            } else {
-                alert("Email ไม่ถูกต้อง")
-            }
-            if (passWord.value === cofipassWord.value && passWord.value && cofipassWord.value !== "") {
-                console.log("password yes");
-                i++
-            } else {
-                alert("Password ไม่ถูกต้อง")
-            }
-            if (i === 3) {
-                postdata = {
-                    username: username.value,
-                    email: email.value,
-                    password: passWord.value
-                }
-            }
-            adduser(postdata)
+        let username = document.getElementById("username")
+        let email = document.getElementById("e-mail")
+        let password = document.getElementById("password")
+        let Com_password = document.getElementById("confirm-password")
+
+        let RegisterUser = evt => {
+            evt.preventDefault();
+            createUserWithEmailAndPassword(auth, email.value, password.value)
+                .then((credentials) => {
+                    console.log(credentials);
+                    set(ref(db, 'UserAuthList/' + credentials.user.uid), {
+                        username: username.value
+                    })
+                })
+                .catch((error) => {
+                    alter(error.message)
+                    console.log(error.code);
+                    console.log(error.message);
+                })
         }
-        function adduser(data) {
-            postdata = data
-            return postdata
-        }
-        export { adduser }
+        MainForm.addEventListener('submit', RegisterUser)
     </script>
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 

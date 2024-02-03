@@ -9,7 +9,6 @@ const firebaseConfig = {
     appId: "1:595736427785:web:9f6043cfecd63e4db567d8",
     measurementId: "G-7TJY5YJDVF"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 let foodall = [];
