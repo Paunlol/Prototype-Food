@@ -11,6 +11,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+console.log("db", db);
 let foodall = [];
 let userList = [];
 
@@ -20,6 +21,12 @@ async function getFoods(db) {
     return empSnapshot;
 }
 export { getFoods }
+
+async function createCollection(db) {
+    const usersCollection = db.collection("users");
+    console.log("yes");
+}
+export { createCollection }
 
 async function getUser(db) {
     const userCol = collection(db, 'user1');

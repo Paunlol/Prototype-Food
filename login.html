@@ -101,25 +101,17 @@
         const db = getDatabase();
         const auth = getAuth(app);
         const dbref = ref(db)
-
         let email = document.getElementById("e-mail")
         let password = document.getElementById("password")
         let Com_password = document.getElementById("confirm-password")
 
         let SingInUser = evt => {
             evt.preventDefault();
+
             signInWithEmailAndPassword(auth, email.value, password.value)
                 .then((credentials) => {
-                    console.log(credentials);
-                    get(child(dbref, 'UserAuthList/' + credentials.user.uid)).then((snapshot) => {
-                        if (snapshot.exists) {
-                            sessionStorage.setItem("user-info", JSON.stringify({
-                                username: snapshot.val().username
-                            }))
-                            sessionStorage.setItem("user-info", JSON.stringify(credentials.user))
-                            window.location.href = "home.html"
-                        }
-                    })
+                    console.log(credentials.user);
+                    window.location.href = "home.html"
                 })
                 .catch((error) => {
                     alert(error.message)
@@ -127,7 +119,6 @@
                     console.log(error.message);
                 })
         }
-
         MainForm.addEventListener('submit', SingInUser)
     </script>
 
