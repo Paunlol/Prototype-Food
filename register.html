@@ -9,8 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" type="image/x-icon" href="/img/LoGo_KinRaiD 1.png">
-    <title>SB Admin 2 - Register</title>
-
+    <title>Register</title>
     <!-- Custom fonts for this template-->
     <script src="https://kit.fontawesome.com/cefd25e2a1.js" crossorigin="anonymous"></script>
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -37,31 +36,31 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">create your Account!</h1>
                             </div>
-                            <form class="user">
+                            <form id="MainForm" class="user">
                                 <div class="form-group ">
                                     <div class="mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="exampleFirstName"
+                                        <input id="username" type="text" class="form-control form-control-user"
                                             placeholder="Username">
                                     </div>
 
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail"
+                                    <input id="e-mail" type="email" class="form-control form-control-user"
                                         placeholder="Email Address">
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="password" class="form-control form-control-user"
-                                            id="exampleInputPassword" placeholder="Password">
+                                        <input type="password" class="form-control form-control-user" id="password"
+                                            placeholder="Password">
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="password" class="form-control form-control-user"
-                                            id="exampleRepeatPassword" placeholder="Confirm Password">
+                                            id="confirm-password" placeholder="Confirm Password">
                                     </div>
                                 </div>
-                                <a href="login.html" class="btn btn-success btn-user btn-block">
+                                <button id="submit" type="submit" class="btn btn-success btn-user btn-block">
                                     Register Account
-                                </a>
+                                </button>
                             </form>
                             <hr>
                             <div class="text-center">
@@ -77,11 +76,53 @@
         </div>
 
     </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, set, ref } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJMwXm9sPITs4vL8VcQl6sb6eqQbuvzuM",
+            authDomain: "kinraidee-32dc4.firebaseapp.com",
+            projectId: "kinraidee-32dc4",
+            storageBucket: "kinraidee-32dc4.appspot.com",
+            messagingSenderId: "595736427785",
+            appId: "1:595736427785:web:9f6043cfecd63e4db567d8",
+            measurementId: "G-7TJY5YJDVF"
+        };
 
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        const auth = getAuth(app);
+
+        let username = document.getElementById("username")
+        let email = document.getElementById("e-mail")
+        let password = document.getElementById("password")
+        let Com_password = document.getElementById("confirm-password")
+
+        let RegisterUser = evt => {
+            evt.preventDefault();
+
+            createUserWithEmailAndPassword(auth, email.value, password.value)
+                .then((credentials) => {
+                    updateProfile(auth.currentUser, {
+                        displayName: username.value
+                    })
+                    window.location.href = "login.html"
+                    // console.log(credentials);
+                    // console.log(credentials.user.uid);
+                })
+                .catch((error) => {
+                    alert(error.message);
+                    console.log(error.code);
+                    console.log(error.message);
+                })
+        }
+
+        MainForm.addEventListener('submit', RegisterUser)
+    </script>
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 

@@ -2,15 +2,14 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" type="image/x-icon" href="/img/LoGo_KinRaiD 1.png">
-    <title>SB Admin 2 - Login</title>
-
+    <title>Login</title>
+    <script src="js/firebase.js" type="module"></script>
     <!-- Custom fonts for this template-->
     <script src="https://kit.fontawesome.com/cefd25e2a1.js" crossorigin="anonymous"></script>
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -24,7 +23,6 @@
 </head>
 
 <body class="bg-gradient-warning">
-
     <div class="container">
         <div class="text-center pt-5 d-block d-lg-none">
             <img src="img/LoGo_KinRaiD 1.png" class="img-fluid rounded-top" width="50%"><br>
@@ -47,15 +45,14 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Login</h1>
                                     </div>
-                                    <form class="user">
+                                    <form id="MainForm" class="user">
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Email ">
+                                            <input type="email" class="form-control form-control-user" id="e-mail"
+                                                aria-describedby="emailHelp" placeholder="Email ">
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user"
-                                                id="exampleInputPassword" placeholder="Password">
+                                            <input type="password" class="form-control form-control-user" id="password"
+                                                placeholder="Password">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
@@ -64,9 +61,12 @@
                                                     Me</label>
                                             </div>
                                         </div>
-                                        <a href="home.html" class="btn btn-success btn-user btn-block">
+                                        <button type="submit" class="btn btn-success btn-user btn-block">
                                             Login
-                                        </a>
+                                        </button>
+                                        <!-- <a href="home.html" class="btn btn-success btn-user btn-block">
+                                            Login
+                                        </a> -->
                                     </form>
                                     <hr>
                                     <div class="text-center">
@@ -80,13 +80,47 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
-
     </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, get, ref, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJMwXm9sPITs4vL8VcQl6sb6eqQbuvzuM",
+            authDomain: "kinraidee-32dc4.firebaseapp.com",
+            projectId: "kinraidee-32dc4",
+            storageBucket: "kinraidee-32dc4.appspot.com",
+            messagingSenderId: "595736427785",
+            appId: "1:595736427785:web:9f6043cfecd63e4db567d8",
+            measurementId: "G-7TJY5YJDVF"
+        };
 
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        const auth = getAuth(app);
+        const dbref = ref(db)
+        let email = document.getElementById("e-mail")
+        let password = document.getElementById("password")
+        let Com_password = document.getElementById("confirm-password")
+
+        let SingInUser = evt => {
+            evt.preventDefault();
+
+            signInWithEmailAndPassword(auth, email.value, password.value)
+                .then((credentials) => {
+                    console.log(credentials.user);
+                    window.location.href = "home.html"
+                })
+                .catch((error) => {
+                    alert(error.message)
+                    console.log(error.code);
+                    console.log(error.message);
+                })
+        }
+        MainForm.addEventListener('submit', SingInUser)
+    </script>
 
 </body>
 

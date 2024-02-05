@@ -314,16 +314,17 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <button id="signout" class="btn btn-primary">Logout</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { createCollection } from "/js/firebase.js";
+        // createCollection()z  
         let Eaten = 1500
         let Total = 2500
-
         let getEaten = document.getElementById('eatenKacl')
         let getTotal = document.getElementById('totolKacl')
         // console.log(getEaten);
@@ -357,6 +358,20 @@
             progressBar.style.width = `${value}%`;
             progressBar.setAttribute('aria-valuenow', value);
         }
+        let Signout = () => {
+            sessionStorage.removeItem("user-cred")
+            sessionStorage.removeItem("user-info")
+            window.location.href = "login.html"
+        }
+        // let CheckCred = () => {
+        //     if (!sessionStorage.getItem("user-cred"))
+        //         window.location.href = "login.html"
+        //     else {
+
+        //     }
+        // }
+        // window.addEventListener('load', CheckCred)
+        // Signout.addEventListener('click', Signout)
     </script>
 
     <!-- Bootstrap core JavaScript-->

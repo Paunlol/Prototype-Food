@@ -1,4 +1,3 @@
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 const firebaseConfig = {
@@ -10,9 +9,9 @@ const firebaseConfig = {
     appId: "1:595736427785:web:9f6043cfecd63e4db567d8",
     measurementId: "G-7TJY5YJDVF"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+console.log("db", db);
 let foodall = [];
 let userList = [];
 
@@ -21,13 +20,20 @@ async function getFoods(db) {
     const empSnapshot = await getDocs(foodCol);
     return empSnapshot;
 }
+export { getFoods }
+
+async function createCollection(db) {
+    const usersCollection = db.collection("users");
+    console.log("yes");
+}
+export { createCollection }
 
 async function getUser(db) {
-    const userCol = collection(db, 'userlist');
+    const userCol = collection(db, 'user1');
     const userSnapshot = await getDocs(userCol);
     return userSnapshot;
 }
-
+export { getUser }
 // ใช้ Promise.all เพื่อรอรับผลลัพธ์จากทั้งสอง Promise
 const [data1, data2] = await Promise.all([getFoods(db), getUser(db)]);
 
