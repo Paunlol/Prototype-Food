@@ -116,11 +116,12 @@
         let gender = {
             sex: "",
         }
+        let totalkcal = 0
         maleCheckbox.addEventListener('change', function () {
             if (this.checked) {
                 femaleCheckbox.disabled = true;
                 gender = {
-                    sex: "Male",
+                    sex: "male",
                 }
                 console.log("sex", gender);
             } else {
@@ -134,7 +135,7 @@
             if (this.checked) {
                 maleCheckbox.disabled = true;
                 gender = {
-                    sex: "Female",
+                    sex: "female",
                 }
                 console.log("sex", gender);
             } else {
@@ -152,23 +153,37 @@
             bmi = parseFloat(prebmi.toFixed(2))
         }
 
+        function calculateCalories(bmi, paraGender) {
+            let calories = 0;
+            if (paraGender === 'male') {
+                calories = 66 + (13.75 * parseFloat(weight.value)) + (5 * parseFloat(height.value)) - (6.8 * parseFloat(age.value));
+            } else if (paraGender === 'female') {
+                calories = 655 + (9.56 * parseFloat(weight.value)) + (1.85 * parseFloat(height.value)) - (4.68 * parseFloat(age.value));
+            } else {
+                console.log("NO calculateCalories");
+            }
+            totalkcal = parseFloat(calories.toFixed(0));
+            console.log("totalkcal", totalkcal);
+        }
+
         let BioUser = async evt => {
             evt.preventDefault();
 
             await calculateBMI(weight.value, height.value)
-            console.log("calculateBMI", bmi);
-            if (gender && gender.sex !== "" && age && age.value > 0 && weight && weight.value > 0 && height && height.value > 0) {
+            await calculateCalories(bmi, gender.sex)
+            if (gender && gender.sex !== "" && age && age.value > 0 && weight && weight.value > 0 && height && height.value > 0 && totalkcal && totalkcal > 0) {
                 let postdata = {
                     sex: gender.sex,
-                    age: age.value,
-                    weight: weight.value,
-                    height: height.value,
-                    bmi: bmi
+                    age: parseFloat(age.value),
+                    weight: parseFloat(weight.value),
+                    height: parseFloat(height.value),
+                    bmi: bmi,
+                    totalkcal: totalkcal
                 }
                 console.log("posdata", postdata);
                 sessionStorage.setItem("user-bio", JSON.stringify(postdata))
-                addData(uid)
-                // window.location.href = "login.html"
+                await addData(uid)
+                window.location.href = "login.html"
             }
             else {
                 alert('ข้อมูลไม่ถูกต้อง')

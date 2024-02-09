@@ -16,19 +16,18 @@ const db = getFirestore(app);
 let foodall = [];
 let userList = [];
 
-async function getFoods(db) {
+
+export async function getFoods(db) {
     const foodCol = collection(db, 'food');
     const empSnapshot = await getDocs(foodCol);
     return empSnapshot;
 }
-export { getFoods }
 
-async function getUser(db) {
+export async function getUser(db) {
     const userCol = collection(db, 'user1');
     const userSnapshot = await getDocs(userCol);
     return userSnapshot;
 }
-export { getUser }
 
 async function addData(name) {
     let uid = name
@@ -36,9 +35,13 @@ async function addData(name) {
     let bio = JSON.parse(sessionStorage.getItem("user-bio"))
     console.log("info", info);
     console.log("bio", bio);
-    if (info && info.displayName !== "" && info.email !== "" && info.password !== "" && bio && bio.age !== "" && bio.height !== "" && bio.sex !== "" && bio.weight !== "" && bio.bmi !== "") {
+    if (info && info.displayName !== "" && info.email !== "" && info.password !== "" && bio && bio.age !== "" && bio.height !== "" && bio.sex !== "" && bio.weight !== "" && bio.bmi !== "" && bio.totalkcal > 0) {
         const userDocRef1 = doc(collection(db, uid), "info");
         const userDocRef2 = doc(collection(db, uid), "bio");
+        const userDocRef3 = doc(collection(db, uid), "dashboard");
+        const userDocRef4 = doc(collection(db, uid), "breakfast");
+        const userDocRef5 = doc(collection(db, uid), "lunch");
+        const userDocRef6 = doc(collection(db, uid), "diner");
         await setDoc(userDocRef1, {
             username: info.displayName,
             email: info.email,
@@ -51,35 +54,55 @@ async function addData(name) {
             weight: bio.weight,
             bmi: bio.bmi
         })
+        await setDoc(userDocRef3, {
+            eaten: 0,
+            total: bio.totalkcal,
+            breakfast: 0,
+            lunch: 0,
+            dinner: 0
+        })
+        await setDoc(userDocRef3, {
+            eaten: 0,
+            total: bio.totalkcal,
+            breakfast: 0,
+            lunch: 0,
+            dinner: 0
+        })
+        await setDoc(userDocRef4, {
+            carb: 0,
+            fat: 0,
+            kcal: 0,
+            name: "",
+            protein: 0
+        })
+        await setDoc(userDocRef5, {
+            carb: 0,
+            fat: 0,
+            kcal: 0,
+            name: "",
+            protein: 0
+        })
+        await setDoc(userDocRef6, {
+            carb: 0,
+            fat: 0,
+            kcal: 0,
+            name: "",
+            protein: 0
+        })
         console.log("savedata");
     } else {
         console.log("ข้อมูลยังไม่ครบ");
     }
 }
 export { addData }
-// ใช้ Promise.all เพื่อรอรับผลลัพธ์จากทั้งสอง Promise
 const [data1, data2] = await Promise.all([getFoods(db), getUser(db)]);
-
-// ใช้ forEach ในการดึงข้อมูล Food
+// console.log("data1", data1);
 data1.forEach(Food => {
-    // console.log("Food", Food.data());
     foodall.push(Food.data());
 });
-// console.log("foodall", foodall);
 
-// ใช้ forEach ในการดึงข้อมูล User
 data2.forEach(user => {
     userList.push(user.data());
 });
-// console.log("userList", userList);
 localStorage.setItem('foodall', JSON.stringify(foodall));
 localStorage.setItem('userList', JSON.stringify(userList));
-
-export function addfood() {
-    // console.log("export yessssssss");
-    // db.collection("user1").doc("LA").set({
-    //     name: "Los Angeles",
-    //     state: "CA",
-    //     country: "USA"
-    // })
-}

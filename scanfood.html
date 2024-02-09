@@ -384,12 +384,10 @@
         async function init() {
             // เลือกไฟล์รูปภาพ
             const inputElement = document.getElementById('input-file');
-            // console.log("inputElement", inputElement);
-            // เรียกใช้ Teachable Machine model
             const URL = 'https://teachablemachine.withgoogle.com/models/tz989cxYn/';
             const model = await tmImage.load(URL + 'model.json', URL + 'metadata.json');
+            console.log("model", model);
             console.log("เรียกใช้ Teachable Machine model");
-
             // ให้ผู้ใช้เลือกรูปภาพเมื่อคลิกที่ไฟล์
             inputElement.addEventListener('change', handleImageUpload);
 
