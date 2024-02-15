@@ -1,12 +1,12 @@
 // Set new default font family and font color to mimic Bootstrap's default styling
 Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#858796';
-// console.log("asdasd", Eaten);
+// //console.log("asdasd", Eaten);
 // Pie Chart Example
 let eaten = parseInt(sessionStorage.getItem('eaten'))
 let total = parseInt(sessionStorage.getItem('total'))
-console.log("eaten", eaten);
-console.log("total", total);
+//console.log("eaten", eaten);
+//console.log("total", total);
 let eat_total = 0
 if (eaten && total) {
   eat_total = total - eaten

@@ -277,7 +277,7 @@
                 measurementId: "G-7TJY5YJDVF"
             };
             let userdata = JSON.parse(sessionStorage.getItem("user-info"))
-            console.log("userdata", userdata);
+            //console.log("userdata", userdata);
             let usertext = document.getElementById('username-text')
             usertext.innerHTML = userdata.displayName
             document.addEventListener('DOMContentLoaded', async () => {
@@ -288,7 +288,7 @@
             const getData = await getDocs(collection(db, userdata.uid));
             let bio = {}
             getData.forEach((doc) => {
-                console.log(doc.id, " => ", doc.data());
+                //console.log(doc.id, " => ", doc.data());
                 if (doc.id === "bio") {
                     bio = doc.data()
                 }
@@ -334,7 +334,7 @@
 
             function checkuserdata() {
                 if (userdata && userdata.accessToken !== "" && userdata.displayName !== "") {
-                    console.log("pass");
+                    //console.log("pass");
                 } else {
                     sessionStorage.clear();
                     window.location.href = "login.html"
@@ -362,11 +362,11 @@
                 const docRef1 = doc(collection(db, userdata.uid), "bio")
                 const docRef2 = doc(collection(db, userdata.uid), "dashboard")
                 const weight = document.getElementById('weight').value;
-                console.log(parseInt(weight));
+                //console.log(parseInt(weight));
                 const height = document.getElementById('height').value;
-                console.log(parseInt(height));
+                //console.log(parseInt(height));
                 const bmi = (weight / (((height / 100) ** 2)).toFixed(2));
-                console.log(parseFloat(bmi.toFixed(2)));
+                //console.log(parseFloat(bmi.toFixed(2)));
 
                 let calories = 0;
                 if (bio.sex === 'male') {
@@ -374,14 +374,14 @@
                 } else if (bio.sex === 'female') {
                     calories = 655 + (9.56 * parseFloat(weight)) + (1.85 * parseFloat(height)) - (4.68 * bio.age);
                 } else {
-                    console.log("NO calculateCalories");
+                    //console.log("NO calculateCalories");
                 }
 
                 if (height && height > 0 && weight && weight > 0 && bmi && bmi > 0 && calories && calories > 0) {
-                    // console.log("height", height);
-                    // console.log("weight", weight);
-                    // console.log("bmi", bmi);
-                    // console.log("calories", calories);
+                    // //console.log("height", height);
+                    // //console.log("weight", weight);
+                    // //console.log("bmi", bmi);
+                    // //console.log("calories", calories);
                     await updateDoc(docRef1, {
                         height: parseInt(height),
                         weight: parseInt(weight),
