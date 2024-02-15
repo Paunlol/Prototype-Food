@@ -65,11 +65,11 @@
                     <i class="fa-solid fa-camera"></i>
                     <span>Scan Food</span></a>
             </li>
-            <li class="nav-item ">
+            <!-- <li class="nav-item ">
                 <a class="nav-link" href="profile.html">
                     <i class="fa-solid fa-user"></i>
                     <span>Profile</span></a>
-            </li>
+            </li> -->
 
         </ul>
         <!-- End of Sidebar -->
@@ -146,7 +146,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span id="username-text" class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
                                 <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
@@ -270,7 +270,7 @@
                                                     </div>
                                                     <div class="form-check h5 form-check-inline">
                                                         <input class="form-check-input" type="radio"
-                                                            name="inlineRadioOptions" id="dinner-time" value="option3">
+                                                            name="inlineRadioOptions" id="diner-time" value="option3">
                                                         <span class="form-check-label" for="inlineRadio3">Dinner</span>
                                                     </div>
                                                 </div>
@@ -347,14 +347,101 @@
     </div>
 
     <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJMwXm9sPITs4vL8VcQl6sb6eqQbuvzuM",
+            authDomain: "kinraidee-32dc4.firebaseapp.com",
+            projectId: "kinraidee-32dc4",
+            storageBucket: "kinraidee-32dc4.appspot.com",
+            messagingSenderId: "595736427785",
+            appId: "1:595736427785:web:9f6043cfecd63e4db567d8",
+            measurementId: "G-7TJY5YJDVF"
+        };
         let userdata = JSON.parse(sessionStorage.getItem("user-info"))
         console.log("userdata", userdata);
+        let usertext = document.getElementById('username-text')
+        usertext.innerHTML = userdata.displayName
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+
         let logoutBtn = document.getElementById('logoutButton')
         const button_addfood = document.getElementById('add-food');
         const foodAll = JSON.parse(localStorage.getItem('foodall'));
         const user = JSON.parse(localStorage.getItem('userList'));
         console.log("foodAll", foodAll);
         console.log("user", user);
+        const breakfast_time = document.getElementById('breakfast-time')
+        const lunch_time = document.getElementById('lunch-time')
+        const diner_time = document.getElementById('diner-time')
+        let postdata = {}
+
+
+
+        async function addfood() {
+            const docRef1 = doc(collection(db, userdata.uid), "breakfast")
+            const docRef2 = doc(collection(db, userdata.uid), "lunch")
+            const docRef3 = doc(collection(db, userdata.uid), "diner")
+            console.log("breakfast_time", breakfast_time.checked);
+            console.log("lunch_time", lunch_time.checked);
+            console.log("diner_time", diner_time.checked);
+            if (breakfast_time.checked === true) {
+                await updateDoc(docRef1, {
+                    carb: postdata.carb,
+                    fat: postdata.fat,
+                    name: postdata.name,
+                    protein: postdata.protein,
+                    kcal: postdata.kcal
+                });
+                alert('Breakfast Time data saved successfully.');
+                location.reload();
+            } else if (lunch_time.checked === true) {
+                await updateDoc(docRef2, {
+                    carb: postdata.carb,
+                    fat: postdata.fat,
+                    name: postdata.name,
+                    protein: postdata.protein,
+                    kcal: postdata.kcal
+                });
+                alert('Lunch Time data saved successfully.');
+                location.reload();
+            } else if (diner_time.checked === true) {
+                await updateDoc(docRef3, {
+                    carb: postdata.carb,
+                    fat: postdata.fat,
+                    name: postdata.name,
+                    protein: postdata.protein,
+                    kcal: postdata.kcal
+                });
+                alert('Diner Time data saved successfully.');
+                location.reload();
+            }
+            else {
+                alert('Save Menu fail.');
+
+            }
+            // if (height && height > 0 && weight && weight > 0 && bmi && bmi > 0 && calories && calories > 0) {
+            //     console.log("height", height);
+            //     console.log("weight", weight);
+            //     console.log("bmi", bmi);
+            //     console.log("calories", calories);
+            //     // await updateDoc(docRef1, {
+            //     //     height: parseInt(height),
+            //     //     weight: parseInt(weight),
+            //     //     bmi: parseFloat(bmi.toFixed(2))
+            //     // });
+            //     // await updateDoc(docRef2, {
+            //     //     total: parseInt(calories.toFixed(2))
+            //     // });
+            //     // location.reload();
+            // } else {
+            //     alert('BMI data fail.');
+
+            // }
+        }
+        button_addfood.addEventListener('click', addfood)
+
         document.addEventListener('DOMContentLoaded', async () => {
             await checkuserdata()
             await init()
@@ -488,7 +575,6 @@
                         return null;
                 });
                 foodtext(newItems)
-                saveMenu(newItems[0].matchingFood);
                 // console.log(newItems);
             } else {
                 console.log("No classNames or probabilities");
@@ -499,7 +585,9 @@
                 let totla_fat = document.getElementById('totlafat');
                 let totla_carb = document.getElementById('totlacarb');
                 let totla_protein = document.getElementById('totlaprotein');
-                console.log("foodlist", foodlist);
+                postdata = foodlist[0].matchingFood
+                console.log("postdatapostdatapostdata", postdata);
+                console.log("foodlist", foodlist[0]);
                 name_menu.innerHTML = `${foodlist[0].thainame}`
                 totla_kcal.value = `${foodlist[0].matchingFood.kcal} kcal`
                 totla_fat.value = `${foodlist[0].matchingFood.fat} g`
@@ -523,11 +611,7 @@
             result.style.color = color;
             // resultHTML.style.backgroundColor = color;
         }
-        async function saveMenu(food) {
-            // alert("saved successfully")
-            // addfood = food
-            // console.log("addfood");
-        }
+
 
     </script>
     <!-- Bootstrap core JavaScript-->

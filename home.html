@@ -64,11 +64,11 @@
                     <i class="fa-solid fa-camera"></i>
                     <span>Scan Food</span></a>
             </li>
-            <li class="nav-item ">
+            <!-- <!-- <li class="nav-item ">
                 <a class="nav-link" href="profile.html">
                     <i class="fa-solid fa-user"></i>
                     <span>Profile</span></a>
-            </li>
+            </li> --> -->
 
         </ul>
         <!-- End of Sidebar -->
@@ -147,8 +147,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span id="username-text" class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas
-                                    McGee</span>
+                                <span id="username-text" class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
                                 <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
@@ -232,7 +231,7 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <h4 class="small font-weight-bold">Breakfast <span class="float-right">finished!</span>
+                                <h4 class="small font-weight-bold">Breakfast
                                 </h4>
                                 <div id="customProgressBar" class="progress">
                                     <div id="customProgressBarValue1" class="progress-bar bg-gradient-warning-90"
@@ -240,7 +239,7 @@
                                     </div>
                                 </div>
                                 <h4 class="small font-weight-bold">Lunch
-                                    <span class="float-right">unfinished!</span>
+
                                 </h4>
                                 <div id="customProgressBar" class="progress">
                                     <div id="customProgressBarValue2" class="progress-bar bg-gradient-orange-90"
@@ -248,7 +247,7 @@
                                     </div>
                                 </div>
                                 <h4 class="small font-weight-bold">Dinner
-                                    <span class="float-right">unfinished!</span>
+
                                 </h4>
                                 <div id="customProgressBar" class="progress">
                                     <div id="customProgressBarValue3" class="progress-bar bg-gradient-buledark-90"
@@ -268,13 +267,11 @@
                 <!-- Area Chart -->
                 <div class="col-lg-12">
                     <div class="card shadow mb-4">
-                        <!-- Card Header - Dropdown -->
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                             <h6 class="m-0 font-weight-bold text-primary"><i
                                     class="pr-1 fa-solid fa-weight-scale"></i>Your
                                 Goal!</h6>
                         </div>
-                        <!-- Card Body -->
                         <div class="card-body">
                             <div class="chart-area">
                                 <canvas id="myAreaChart"></canvas>
@@ -327,7 +324,6 @@
     </div>
 
     <script type="module">
-
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, getDocs, doc, setDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         const firebaseConfig = {
@@ -341,33 +337,73 @@
         };
         let userdata = JSON.parse(sessionStorage.getItem("user-info"))
         console.log("userdata", userdata);
-
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkuserdata()
+        })
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const getData = await getDocs(collection(db, userdata.uid));
         let test = []
+        let dashboard = {}
+        let breakfast = {}
+        let lunch = {}
+        let diner = {}
+        let eaten = {}
         getData.forEach((doc) => {
             console.log(doc.id, " => ", doc.data());
-            // ทำอะไรกับข้อมูลที่ได้รับ เช่น แสดงผลหรือเก็บไว้ในตัวแปร
-        });
+            if (doc.id === "dashboard") {
+                dashboard = doc.data()
+            } else if (doc.id === "breakfast") {
+                breakfast = doc.data()
+            }
+            else if (doc.id === "lunch") {
+                lunch = doc.data()
+            }
+            else if (doc.id === "diner") {
+                diner = doc.data()
+            }
+            else {
 
+            }
+        });
+        setdata()
+        async function setdata() {
+            let getEaten = document.getElementById('eatenKacl')
+            let getTotal = document.getElementById('totolKacl')
+            let eaten = breakfast.kcal + lunch.kcal + diner.kcal
+            if (diner.name !== "") {
+                setProgressBarValue3(100)
+            } else {
+                setProgressBarValue3(0)
+            }
+
+            if (breakfast.name !== "") {
+                setProgressBarValue1(100)
+            } else {
+                setProgressBarValue1(0)
+            }
+
+            if (lunch.name !== "") {
+                setProgressBarValue2(100)
+            } else {
+                setProgressBarValue2(0)
+            }
+
+
+            console.log("eaten", eaten);
+            sessionStorage.setItem("eaten", eaten)
+            sessionStorage.setItem("total", dashboard.total)
+            getEaten.innerHTML = `${eaten} <span class="text-xs">kcal</span>`
+            getTotal.innerHTML = `${dashboard.total} <span class="text-xs">kcal</span>`
+        }
+        console.log("dashboard", dashboard);
+        console.log("breakfast", breakfast);
+        console.log("lunch", lunch);
+        console.log("diner", diner);
         let usertext = document.getElementById('username-text')
-        let Eaten = 1500
-        let Total = 2500
-        let getEaten = document.getElementById('eatenKacl')
-        let getTotal = document.getElementById('totolKacl')
-        let logoutBtn = document.getElementById('logoutButton')
-        // const docRef = doc(db, userdata.uid, "testDelet"); //ทดลองลบข้อมู,ไปปปปปปปปปปปปปปปปปปป
-        // console.log(getEaten);
-        showKacl() //Run eaten & total
-        setProgressBarValue1(100); //Breakfast
-        setProgressBarValue2(0); // lunch
-        setProgressBarValue3(0); //diner
-        document.addEventListener('DOMContentLoaded', async () => {
-            await checkuserdata()
-        })
-        // await deleteDoc(docRef);
         usertext.innerHTML = userdata.displayName
+        let logoutBtn = document.getElementById('logoutButton')
+
 
         let Logout = () => {
             sessionStorage.clear()
@@ -376,7 +412,7 @@
 
         logoutBtn.addEventListener('click', Logout)
 
-        function checkuserdata() {
+        async function checkuserdata() {
             if (userdata && userdata.accessToken && userdata.accessToken !== "" && userdata.displayName !== "") {
                 console.log("pass");
             } else {
@@ -385,46 +421,22 @@
             }
         }
 
-        function showKacl() {
-            getEaten.innerHTML = `${Eaten} <span class="text-xs">kcal</span>`
-            getTotal.innerHTML = `${Total} <span class="text-xs">kcal</span>`
-        }
-
-        function getValues() {
-            return {
-                Eaten: Eaten,
-                Total: Total
-            };
-        }
-        function setProgressBarValue1(value) {
+        async function setProgressBarValue1(value) {
             const progressBar = document.getElementById('customProgressBarValue1');
             progressBar.style.width = `${value}%`;
             progressBar.setAttribute('aria-valuenow', value);
         }
-        function setProgressBarValue2(value) {
+        async function setProgressBarValue2(value) {
             const progressBar = document.getElementById('customProgressBarValue2');
             progressBar.style.width = `${value}%`;
             progressBar.setAttribute('aria-valuenow', value);
         }
-        function setProgressBarValue3(value) {
+        async function setProgressBarValue3(value) {
             const progressBar = document.getElementById('customProgressBarValue3');
             progressBar.style.width = `${value}%`;
             progressBar.setAttribute('aria-valuenow', value);
         }
-        let Signout = () => {
-            sessionStorage.removeItem("user-cred")
-            sessionStorage.removeItem("user-info")
-            window.location.href = "login.html"
-        }
-        // let CheckCred = () => {
-        //     if (!sessionStorage.getItem("user-cred"))
-        //         window.location.href = "login.html"
-        //     else {
 
-        //     }
-        // }
-        // window.addEventListener('load', CheckCred)
-        // Signout.addEventListener('click', Signout)
     </script>
 
     <!-- Bootstrap core JavaScript-->
@@ -440,8 +452,8 @@
     <script src="vendor/chart.js/Chart.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <!-- <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script> -->
+    <script src="js/demo/chart-area-demo.js"></script>
+    <script src="js/demo/chart-pie-demo.js"></script>
 
 </body>
 
