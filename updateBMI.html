@@ -21,6 +21,8 @@
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
@@ -59,11 +61,11 @@
                     <i class="fa-solid fa-camera"></i>
                     <span>Scan Food</span></a>
             </li>
-            <li class="nav-item ">
+            <!-- <li class="nav-item ">
                 <a class="nav-link" href="profile.html">
                     <i class="fa-solid fa-user"></i>
                     <span>Profile</span></a>
-            </li>
+            </li> -->
 
         </ul>
         <!-- End of Sidebar -->
@@ -140,7 +142,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span id="username-text" class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
                                 <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
@@ -179,10 +181,11 @@
                                 <div class="row card-body">
                                     <div class="col-sm-6 col-xs-12 text-center">
                                         <div class="text-center">
-                                            <img src="img/img Body/G-1.png" width="30%" class="img-fluid rounded-top"
-                                                alt="">
+                                            <img id="image-body" src="img/LoGo_KinRaiD 1.png" width="30%"
+                                                class="img-fluid rounded-top" alt="">
                                         </div>
-                                        <div class="pt-3 h5">Body Status : <span class="text-success">Normal</span>
+                                        <div class="pt-3 h5">Body Status : <span id="status"
+                                                class="text-success"></span>
                                         </div>
                                     </div>
                                     <div class="col-sm-6 col-xs-12">
@@ -190,7 +193,7 @@
                                         <div class="pb-3 ">
                                             <label class="h5 pl-2">Age</label>
                                             <input class="form-control form-control-user" disabled type="number"
-                                                id="age" placeholder="18">
+                                                id="age" placeholder="Enter age">
                                         </div>
                                         <div class="pb-3 ">
                                             <label class="h5 pl-2">Weight (kg)</label>
@@ -198,20 +201,19 @@
                                                 placeholder="Enter weight">
                                         </div>
                                         <div class="pb-3 ">
-                                            <label class="h5 pl-2">Weight (kg)</label>
+                                            <label class="h5 pl-2">Height (cm)</label>
                                             <input class="form-control form-control-user" type="number" id="height"
                                                 placeholder="Enter height">
                                         </div>
 
                                         <div class="row align-content-between justify-content-center pt-4">
                                             <div class="col-6 text-center ">
-                                                <button class="btn btn-primary btn-lg text-center"
-                                                    onclick="calculateBMI()">Calculate
+                                                <button id="calculateBMI"
+                                                    class="btn btn-primary btn-lg text-center">Calculate
                                                     BMI</button>
                                             </div>
-                                            <div class="col-6 text-center">
-                                                <button class="btn btn-success btn-lg text-center"
-                                                    onclick="saveBMI()">Save BMI</button>
+                                            <div id="saveBMI" class="col-6 text-center">
+                                                <button class="btn btn-success btn-lg text-center">Save BMI</button>
                                             </div>
                                         </div>
                                         <div class="h2 text-center pt-5" id="result"></div>
@@ -256,34 +258,146 @@
                     <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" href="login.html">Logout</a>
+                        <button id="logoutButton" class="btn btn-primary">Logout</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <script>
-            // JavaScript (script.js)
-            function calculateBMI(event) {
-                // event.preventDefault();  // ป้องกันการทำงานเริ่มต้นของปุ่ม
+        <script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+            import { getFirestore, collection, getDocs, doc, setDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+            const firebaseConfig = {
+                apiKey: "AIzaSyBJMwXm9sPITs4vL8VcQl6sb6eqQbuvzuM",
+                authDomain: "kinraidee-32dc4.firebaseapp.com",
+                projectId: "kinraidee-32dc4",
+                storageBucket: "kinraidee-32dc4.appspot.com",
+                messagingSenderId: "595736427785",
+                appId: "1:595736427785:web:9f6043cfecd63e4db567d8",
+                measurementId: "G-7TJY5YJDVF"
+            };
+            let userdata = JSON.parse(sessionStorage.getItem("user-info"))
+            console.log("userdata", userdata);
+            let usertext = document.getElementById('username-text')
+            usertext.innerHTML = userdata.displayName
+            document.addEventListener('DOMContentLoaded', async () => {
+                await checkuserdata()
+            })
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            const getData = await getDocs(collection(db, userdata.uid));
+            let bio = {}
+            getData.forEach((doc) => {
+                console.log(doc.id, " => ", doc.data());
+                if (doc.id === "bio") {
+                    bio = doc.data()
+                }
+                else {
 
-                // Get weight and height values
+                }
+            });
+            let image_body = document.getElementById('image-body')
+            let age = document.getElementById('age')
+            let weight = document.getElementById('weight');
+            let height = document.getElementById('height');
+            let status = document.getElementById('status');
+            let calculateBMI_btn = document.getElementById('calculateBMI');
+            let saveBMI_btn = document.getElementById('saveBMI');
+            age.placeholder = bio.age;
+            weight.placeholder = bio.weight;
+            height.placeholder = bio.height;
+
+            if (bio.sex === 'male' && bio.bmi < 18.5) {
+                image_body.src = 'img/imgBody/M-1.png';
+                status.innerHTML = "UNDER WEIGHT"
+            } else if (bio.sex === 'male' && bio.bmi >= 18.5 && bio.bmi <= 24.9) {
+                image_body.src = 'img/imgBody/M.png';
+                status.innerHTML = "NORMAL"
+            } else if (bio.sex === 'male' && bio.bmi >= 25) {
+                image_body.src = 'img/imgBody/M-2.png';
+                status.innerHTML = "OVER WEIGHT"
+            }
+            else {
+
+            }
+
+            let logoutBtn = document.getElementById('logoutButton')
+
+            // JavaScript (script.js)
+
+            let Logout = () => {
+                sessionStorage.clear()
+                window.location.href = "login.html"
+            }
+
+            logoutBtn.addEventListener('click', Logout)
+
+            function checkuserdata() {
+                if (userdata && userdata.accessToken !== "" && userdata.displayName !== "") {
+                    console.log("pass");
+                } else {
+                    sessionStorage.clear();
+                    window.location.href = "login.html"
+                }
+            }
+
+            function calculateBMI(event) {
+                event.preventDefault();
                 const weight = document.getElementById('weight').value;
                 const height = document.getElementById('height').value;
 
-                // Check if inputs are valid
                 if (!weight || !height) {
                     alert('Please enter both weight and height.');
                     return;
                 }
 
-                // Calculate BMI
                 const bmi = (weight / ((height / 100) ** 2)).toFixed(2);
 
-                // Display the result
                 const resultElement = document.getElementById('result');
                 resultElement.innerHTML = `<p>Your BMI is: <strong>${bmi}</strong></p>`;
             }
+            calculateBMI_btn.addEventListener('click', calculateBMI)
+
+            async function saveBMI() {
+                const docRef1 = doc(collection(db, userdata.uid), "bio")
+                const docRef2 = doc(collection(db, userdata.uid), "dashboard")
+                const weight = document.getElementById('weight').value;
+                console.log(parseInt(weight));
+                const height = document.getElementById('height').value;
+                console.log(parseInt(height));
+                const bmi = (weight / (((height / 100) ** 2)).toFixed(2));
+                console.log(parseFloat(bmi.toFixed(2)));
+
+                let calories = 0;
+                if (bio.sex === 'male') {
+                    calories = 66 + (13.75 * parseFloat(weight)) + (5 * parseFloat(height)) - (6.8 * bio.age);
+                } else if (bio.sex === 'female') {
+                    calories = 655 + (9.56 * parseFloat(weight)) + (1.85 * parseFloat(height)) - (4.68 * bio.age);
+                } else {
+                    console.log("NO calculateCalories");
+                }
+
+                if (height && height > 0 && weight && weight > 0 && bmi && bmi > 0 && calories && calories > 0) {
+                    // console.log("height", height);
+                    // console.log("weight", weight);
+                    // console.log("bmi", bmi);
+                    // console.log("calories", calories);
+                    await updateDoc(docRef1, {
+                        height: parseInt(height),
+                        weight: parseInt(weight),
+                        bmi: parseFloat(bmi.toFixed(2))
+                    });
+                    await updateDoc(docRef2, {
+                        total: parseInt(calories.toFixed(2))
+                    });
+                    alert('BMI data saved successfully.');
+                    location.reload();
+                } else {
+                    alert('BMI data fail.');
+
+                }
+            }
+            saveBMI_btn.addEventListener('click', saveBMI)
 
 
         </script>
