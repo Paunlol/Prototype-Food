@@ -233,7 +233,7 @@
 
         <script type="module">
             let userdata = JSON.parse(sessionStorage.getItem("user-info"))
-            console.log("userdata", userdata);
+            //console.log("userdata", userdata);
             let logoutBtn = document.getElementById('logoutButton')
             document.addEventListener('DOMContentLoaded', async () => {
                 await checkuserdata()
@@ -247,7 +247,7 @@
 
             function checkuserdata() {
                 if (userdata && userdata.accessToken !== "" && userdata.displayName !== "") {
-                    console.log("pass");
+                    //console.log("pass");
                 } else {
                     sessionStorage.clear();
                     window.location.href = "login.html"

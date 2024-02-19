@@ -12,7 +12,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-// console.log("db", db);
+// //console.log("db", db);
 let foodall = [];
 let userList = [];
 
@@ -33,8 +33,8 @@ async function addData(name) {
     let uid = name
     let info = JSON.parse(sessionStorage.getItem("regis-info"))
     let bio = JSON.parse(sessionStorage.getItem("user-bio"))
-    console.log("info", info);
-    console.log("bio", bio);
+    //console.log("info", info);
+    //console.log("bio", bio);
     if (info && info.displayName !== "" && info.email !== "" && info.password !== "" && bio && bio.age !== "" && bio.height !== "" && bio.sex !== "" && bio.weight !== "" && bio.bmi !== "" && bio.totalkcal > 0) {
         const userDocRef1 = doc(collection(db, uid), "info");
         const userDocRef2 = doc(collection(db, uid), "bio");
@@ -89,14 +89,14 @@ async function addData(name) {
             name: "",
             protein: 0
         })
-        console.log("savedata");
+        //console.log("savedata");
     } else {
-        console.log("ข้อมูลยังไม่ครบ");
+        //console.log("ข้อมูลยังไม่ครบ");
     }
 }
 export { addData }
 const [data1, data2] = await Promise.all([getFoods(db), getUser(db)]);
-// console.log("data1", data1);
+// //console.log("data1", data1);
 data1.forEach(Food => {
     foodall.push(Food.data());
 });

@@ -147,7 +147,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span id="username-text" class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
-                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                                <img id="pic-id" class="img-profile rounded-circle" src="img/undraw_profile_2.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -359,33 +359,54 @@
             measurementId: "G-7TJY5YJDVF"
         };
         let userdata = JSON.parse(sessionStorage.getItem("user-info"))
-        console.log("userdata", userdata);
+        //console.log("userdata", userdata);
         let usertext = document.getElementById('username-text')
         usertext.innerHTML = userdata.displayName
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const getData = await getDocs(collection(db, userdata.uid));
+        let dashboard = {}
+        let bio = {}
+        getData.forEach((doc) => {
+            console.log(doc.id, " => ", doc.data());
+            if (doc.id === "dashboard") {
+                dashboard = doc.data()
+            }
+            else if (doc.id === "bio") {
+                bio = doc.data()
+            }
+            else {
 
+            }
+        });
+
+        let pic_id = document.getElementById('pic-id')
+
+        if (bio.sex === 'male') {
+            pic_id.src = 'img/undraw_profile_2.svg'
+        } else {
+            pic_id.src = 'img/undraw_profile_3.svg'
+        }
 
         let logoutBtn = document.getElementById('logoutButton')
         const button_addfood = document.getElementById('add-food');
         const foodAll = JSON.parse(localStorage.getItem('foodall'));
         const user = JSON.parse(localStorage.getItem('userList'));
-        console.log("foodAll", foodAll);
-        console.log("user", user);
+        //console.log("foodAll", foodAll);
+        //console.log("user", user);
         const breakfast_time = document.getElementById('breakfast-time')
         const lunch_time = document.getElementById('lunch-time')
         const diner_time = document.getElementById('diner-time')
         let postdata = {}
 
 
-
         async function addfood() {
             const docRef1 = doc(collection(db, userdata.uid), "breakfast")
             const docRef2 = doc(collection(db, userdata.uid), "lunch")
             const docRef3 = doc(collection(db, userdata.uid), "diner")
-            console.log("breakfast_time", breakfast_time.checked);
-            console.log("lunch_time", lunch_time.checked);
-            console.log("diner_time", diner_time.checked);
+            //console.log("breakfast_time", breakfast_time.checked);
+            //console.log("lunch_time", lunch_time.checked);
+            //console.log("diner_time", diner_time.checked);
             if (breakfast_time.checked === true) {
                 await updateDoc(docRef1, {
                     carb: postdata.carb,
@@ -422,10 +443,10 @@
 
             }
             // if (height && height > 0 && weight && weight > 0 && bmi && bmi > 0 && calories && calories > 0) {
-            //     console.log("height", height);
-            //     console.log("weight", weight);
-            //     console.log("bmi", bmi);
-            //     console.log("calories", calories);
+            //     //console.log("height", height);
+            //     //console.log("weight", weight);
+            //     //console.log("bmi", bmi);
+            //     //console.log("calories", calories);
             //     // await updateDoc(docRef1, {
             //     //     height: parseInt(height),
             //     //     weight: parseInt(weight),
@@ -446,7 +467,7 @@
             await checkuserdata()
             await init()
             await enableInput()
-            console.log('Page is ready to use!');
+            //console.log('Page is ready to use!');
             // ทำสิ่งที่คุณต้องการทำหลังจากเว็บพร้อมใช้งาน
         });
         let Logout = () => {
@@ -458,7 +479,7 @@
 
         function checkuserdata() {
             if (userdata && userdata.accessToken !== "" && userdata.displayName !== "") {
-                console.log("pass");
+                //console.log("pass");
             } else {
                 sessionStorage.clear();
                 window.location.href = "login.html"
@@ -473,13 +494,13 @@
             const inputElement = document.getElementById('input-file');
             const URL = 'https://teachablemachine.withgoogle.com/models/tz989cxYn/';
             const model = await tmImage.load(URL + 'model.json', URL + 'metadata.json');
-            console.log("model", model);
-            console.log("เรียกใช้ Teachable Machine model");
+            //console.log("model", model);
+            //console.log("เรียกใช้ Teachable Machine model");
             // ให้ผู้ใช้เลือกรูปภาพเมื่อคลิกที่ไฟล์
             inputElement.addEventListener('change', handleImageUpload);
 
             async function handleImageUpload() {
-                // console.log("asdasdasdasdasdasd");
+                // //console.log("asdasdasdasdasdasd");
                 const file = event.target.files[0];
                 if (file) {
                     const reader = new FileReader();
@@ -487,11 +508,11 @@
                         const image = new Image();
                         image.src = e.target.result;
                         const imagePreview = image.src
-                        // console.log("imagePreview", imagePreview);
-                        // console.log("image.src", image.src);
+                        // //console.log("imagePreview", imagePreview);
+                        // //console.log("image.src", image.src);
                         image.onload = async function () {
                             const prediction = await model.predict(image);
-                            // console.log("prediction", prediction); //ค่า predi ยังคงเป็นค่าคำสั่ง
+                            // //console.log("prediction", prediction); //ค่า predi ยังคงเป็นค่าคำสั่ง
                             displayResult(prediction, imagePreview);
                         };
                     };
@@ -532,12 +553,12 @@
                     items.push(item);
                 }
                 items.sort((a, b) => parseFloat(b.rate) - parseFloat(a.rate));
-                // console.log(items);
+                // //console.log(items);
                 resultfood = items[0]
-                // console.log("resultfood", resultfood);
+                // //console.log("resultfood", resultfood);
                 getColor(items[0].rate)
                 const newItems = items.map((item) => {
-                    // console.log("itemasd",item);
+                    // //console.log("itemasd",item);
                     let thainame;
                     const matchingFood = foodAll.find((food) => food.name === item.name);
                     if (item.name === "crispy pork rice") {
@@ -575,9 +596,9 @@
                         return null;
                 });
                 foodtext(newItems)
-                // console.log(newItems);
+                // //console.log(newItems);
             } else {
-                console.log("No classNames or probabilities");
+                //console.log("No classNames or probabilities");
             }
             async function foodtext(foodlist) {
                 let name_menu = document.getElementById('namemenu');
@@ -586,8 +607,8 @@
                 let totla_carb = document.getElementById('totlacarb');
                 let totla_protein = document.getElementById('totlaprotein');
                 postdata = foodlist[0].matchingFood
-                console.log("postdatapostdatapostdata", postdata);
-                console.log("foodlist", foodlist[0]);
+                //console.log("postdatapostdatapostdata", postdata);
+                //console.log("foodlist", foodlist[0]);
                 name_menu.innerHTML = `${foodlist[0].thainame}`
                 totla_kcal.value = `${foodlist[0].matchingFood.kcal} kcal`
                 totla_fat.value = `${foodlist[0].matchingFood.fat} g`
@@ -596,7 +617,7 @@
             }
         }
         async function getColor(probability) {
-            console.log("probability", probability);
+            //console.log("probability", probability);
             let accurate = document.getElementById('Accurate');
             let precent = document.getElementById('Precent');
             let result = document.getElementById('Result');

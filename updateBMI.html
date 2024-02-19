@@ -143,7 +143,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span id="username-text" class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
-                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                                <img id="pic-id" class="img-profile rounded-circle" src="img/undraw_profile_2.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -277,7 +277,7 @@
                 measurementId: "G-7TJY5YJDVF"
             };
             let userdata = JSON.parse(sessionStorage.getItem("user-info"))
-            console.log("userdata", userdata);
+            //console.log("userdata", userdata);
             let usertext = document.getElementById('username-text')
             usertext.innerHTML = userdata.displayName
             document.addEventListener('DOMContentLoaded', async () => {
@@ -288,7 +288,7 @@
             const getData = await getDocs(collection(db, userdata.uid));
             let bio = {}
             getData.forEach((doc) => {
-                console.log(doc.id, " => ", doc.data());
+                //console.log(doc.id, " => ", doc.data());
                 if (doc.id === "bio") {
                     bio = doc.data()
                 }
@@ -303,9 +303,16 @@
             let status = document.getElementById('status');
             let calculateBMI_btn = document.getElementById('calculateBMI');
             let saveBMI_btn = document.getElementById('saveBMI');
+            let pic_id = document.getElementById('pic-id')
             age.placeholder = bio.age;
             weight.placeholder = bio.weight;
             height.placeholder = bio.height;
+
+            if (bio.sex === 'male') {
+                pic_id.src = 'img/undraw_profile_2.svg'
+            } else {
+                pic_id.src = 'img/undraw_profile_3.svg'
+            }
 
             if (bio.sex === 'male' && bio.bmi < 18.5) {
                 image_body.src = 'img/imgBody/M-1.png';
@@ -315,6 +322,18 @@
                 status.innerHTML = "NORMAL"
             } else if (bio.sex === 'male' && bio.bmi >= 25) {
                 image_body.src = 'img/imgBody/M-2.png';
+                status.innerHTML = "OVER WEIGHT"
+            }
+            else if (bio.sex === 'female' && bio.bmi < 18.5) {
+                image_body.src = 'img/imgBody/G-1.png';
+                status.innerHTML = "UNDER WEIGHT"
+            }
+            else if (bio.sex === 'female' && bio.bmi >= 18.5 && bio.bmi <= 24.9) {
+                image_body.src = 'img/imgBody/G.png';
+                status.innerHTML = "NORMAL"
+            }
+            else if (bio.sex === 'female' && bio.bmi >= 25) {
+                image_body.src = 'img/imgBody/G-2.png';
                 status.innerHTML = "OVER WEIGHT"
             }
             else {
@@ -334,7 +353,7 @@
 
             function checkuserdata() {
                 if (userdata && userdata.accessToken !== "" && userdata.displayName !== "") {
-                    console.log("pass");
+                    //console.log("pass");
                 } else {
                     sessionStorage.clear();
                     window.location.href = "login.html"
@@ -362,11 +381,11 @@
                 const docRef1 = doc(collection(db, userdata.uid), "bio")
                 const docRef2 = doc(collection(db, userdata.uid), "dashboard")
                 const weight = document.getElementById('weight').value;
-                console.log(parseInt(weight));
+                //console.log(parseInt(weight));
                 const height = document.getElementById('height').value;
-                console.log(parseInt(height));
+                //console.log(parseInt(height));
                 const bmi = (weight / (((height / 100) ** 2)).toFixed(2));
-                console.log(parseFloat(bmi.toFixed(2)));
+                //console.log(parseFloat(bmi.toFixed(2)));
 
                 let calories = 0;
                 if (bio.sex === 'male') {
@@ -374,14 +393,14 @@
                 } else if (bio.sex === 'female') {
                     calories = 655 + (9.56 * parseFloat(weight)) + (1.85 * parseFloat(height)) - (4.68 * bio.age);
                 } else {
-                    console.log("NO calculateCalories");
+                    //console.log("NO calculateCalories");
                 }
 
                 if (height && height > 0 && weight && weight > 0 && bmi && bmi > 0 && calories && calories > 0) {
-                    // console.log("height", height);
-                    // console.log("weight", weight);
-                    // console.log("bmi", bmi);
-                    // console.log("calories", calories);
+                    // //console.log("height", height);
+                    // //console.log("weight", weight);
+                    // //console.log("bmi", bmi);
+                    // //console.log("calories", calories);
                     await updateDoc(docRef1, {
                         height: parseInt(height),
                         weight: parseInt(weight),
