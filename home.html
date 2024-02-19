@@ -148,7 +148,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span id="username-text" class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
-                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                                <img id="pic-id" class="img-profile rounded-circle" src="img/undraw_profile_2.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -349,6 +349,7 @@
         let lunch = {}
         let diner = {}
         let eaten = {}
+        let bio = {}
         getData.forEach((doc) => {
             //console.log(doc.id, " => ", doc.data());
             if (doc.id === "dashboard") {
@@ -361,6 +362,9 @@
             }
             else if (doc.id === "diner") {
                 diner = doc.data()
+            }
+            else if (doc.id === "bio") {
+                bio = doc.data()
             }
             else {
 
@@ -403,7 +407,13 @@
         let usertext = document.getElementById('username-text')
         usertext.innerHTML = userdata.displayName
         let logoutBtn = document.getElementById('logoutButton')
+        let pic_id = document.getElementById('pic-id')
 
+        if (bio.sex === 'male') {
+            pic_id.src = 'img/undraw_profile_2.svg'
+        } else {
+            pic_id.src = 'img/undraw_profile_3.svg'
+        }
 
         let Logout = () => {
             sessionStorage.clear()

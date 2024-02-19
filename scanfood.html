@@ -147,7 +147,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span id="username-text" class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
-                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                                <img id="pic-id" class="img-profile rounded-circle" src="img/undraw_profile_2.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -364,7 +364,29 @@
         usertext.innerHTML = userdata.displayName
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const getData = await getDocs(collection(db, userdata.uid));
+        let dashboard = {}
+        let bio = {}
+        getData.forEach((doc) => {
+            console.log(doc.id, " => ", doc.data());
+            if (doc.id === "dashboard") {
+                dashboard = doc.data()
+            }
+            else if (doc.id === "bio") {
+                bio = doc.data()
+            }
+            else {
 
+            }
+        });
+
+        let pic_id = document.getElementById('pic-id')
+
+        if (bio.sex === 'male') {
+            pic_id.src = 'img/undraw_profile_2.svg'
+        } else {
+            pic_id.src = 'img/undraw_profile_3.svg'
+        }
 
         let logoutBtn = document.getElementById('logoutButton')
         const button_addfood = document.getElementById('add-food');
@@ -376,7 +398,6 @@
         const lunch_time = document.getElementById('lunch-time')
         const diner_time = document.getElementById('diner-time')
         let postdata = {}
-
 
 
         async function addfood() {
