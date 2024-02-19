@@ -32,7 +32,12 @@
             <div class="card-body p-0">
                 <!-- Nested Row within Card Body -->
                 <div class="row">
-                    <div class="col-lg-5 d-none d-lg-block "></div>
+                    <div class="col-lg-5 d-none d-lg-block ">
+                        <div class=" text-center p-5">
+                            <img id="img-body" src="/img/imgBody/M.png" class="rounded-top" alt="" width="xs"
+                                style="width: 50%; height: auto;">
+                        </div>
+                    </div>
                     <div class="col-lg-7">
                         <div class="p-5">
                             <div class="text-center">
@@ -63,7 +68,7 @@
                                     <div>weight (KG)</div>
                                     <div class=" mb-3 mb-sm-0">
                                         <input type="number" id="weight" class="form-control form-control-user"
-                                            id="password" placeholder="Your weight">
+                                            id="password" placeholder="Your Weight">
                                     </div>
                                 </div>
                                 <div class="form-group col-12">
@@ -113,18 +118,21 @@
         let age = document.getElementById("age")
         let weight = document.getElementById("weight")
         let height = document.getElementById("height")
+        let img_body = document.getElementById("img-body")
         let gender = {
             sex: "",
         }
         let totalkcal = 0
         maleCheckbox.addEventListener('change', function () {
             if (this.checked) {
+                img_body.src = 'img/imgBody/M.png'
                 femaleCheckbox.disabled = true;
                 gender = {
                     sex: "male",
                 }
                 //console.log("sex", gender);
             } else {
+                img_body.src = 'img/imgBody/G.png'
                 femaleCheckbox.disabled = false;
                 gender = {
                     sex: "",
@@ -133,12 +141,14 @@
         })
         femaleCheckbox.addEventListener('change', function () {
             if (this.checked) {
+                img_body.src = 'img/imgBody/G.png'
                 maleCheckbox.disabled = true;
                 gender = {
                     sex: "female",
                 }
                 //console.log("sex", gender);
             } else {
+                img_body.src = 'img/imgBody/M.png'
                 maleCheckbox.disabled = false;
                 gender = {
                     sex: "",
