@@ -336,7 +336,7 @@
             measurementId: "G-7TJY5YJDVF"
         };
         let userdata = JSON.parse(sessionStorage.getItem("user-info"))
-        //console.log("userdata", userdata);
+        //// console.log("userdata", userdata);
         document.addEventListener('DOMContentLoaded', async () => {
             await checkuserdata()
         })
@@ -351,7 +351,7 @@
         let eaten = {}
         let bio = {}
         getData.forEach((doc) => {
-            //console.log(doc.id, " => ", doc.data());
+            //// console.log(doc.id, " => ", doc.data());
             if (doc.id === "dashboard") {
                 dashboard = doc.data()
             } else if (doc.id === "breakfast") {
@@ -394,16 +394,16 @@
             }
 
 
-            //console.log("eaten", eaten);
+            //// console.log("eaten", eaten);
             sessionStorage.setItem("eaten", eaten)
             sessionStorage.setItem("total", dashboard.total)
             getEaten.innerHTML = `${eaten} <span class="text-xs">kcal</span>`
             getTotal.innerHTML = `${dashboard.total} <span class="text-xs">kcal</span>`
         }
-        //console.log("dashboard", dashboard);
-        //console.log("breakfast", breakfast);
-        //console.log("lunch", lunch);
-        //console.log("diner", diner);
+        //// console.log("dashboard", dashboard);
+        //// console.log("breakfast", breakfast);
+        //// console.log("lunch", lunch);
+        //// console.log("diner", diner);
         let usertext = document.getElementById('username-text')
         usertext.innerHTML = userdata.displayName
         let logoutBtn = document.getElementById('logoutButton')
@@ -424,7 +424,7 @@
 
         async function checkuserdata() {
             if (userdata && userdata.accessToken && userdata.accessToken !== "" && userdata.displayName !== "") {
-                //console.log("pass");
+                //// console.log("pass");
             } else {
                 sessionStorage.clear();
                 window.location.href = "login.html"

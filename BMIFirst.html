@@ -107,7 +107,7 @@
             measurementId: "G-7TJY5YJDVF"
         };
         let uid = JSON.parse(sessionStorage.getItem("uid"))
-        //console.log("uid", uid);
+        //// console.log("uid", uid);
         const app = initializeApp(firebaseConfig);
         // const db = getFirestore(app);
         const db = getDatabase();
@@ -130,7 +130,7 @@
                 gender = {
                     sex: "male",
                 }
-                //console.log("sex", gender);
+                //// console.log("sex", gender);
             } else {
                 img_body.src = 'img/imgBody/G.png'
                 femaleCheckbox.disabled = false;
@@ -146,7 +146,7 @@
                 gender = {
                     sex: "female",
                 }
-                //console.log("sex", gender);
+                //// console.log("sex", gender);
             } else {
                 img_body.src = 'img/imgBody/M.png'
                 maleCheckbox.disabled = false;
@@ -155,7 +155,7 @@
                 }
             }
         })
-        //console.log("sex", gender);
+        //// console.log("sex", gender);
 
         function calculateBMI(weight, height) {
             const heightInMeters = height / 100;
@@ -170,10 +170,10 @@
             } else if (paraGender === 'female') {
                 calories = 655 + (9.56 * parseFloat(weight.value)) + (1.85 * parseFloat(height.value)) - (4.68 * parseFloat(age.value));
             } else {
-                //console.log("NO calculateCalories");
+                //// console.log("NO calculateCalories");
             }
             totalkcal = parseFloat(calories.toFixed(0));
-            //console.log("totalkcal", totalkcal);
+            //// console.log("totalkcal", totalkcal);
         }
 
         let BioUser = async evt => {
@@ -190,7 +190,7 @@
                     bmi: bmi,
                     totalkcal: totalkcal
                 }
-                //console.log("posdata", postdata);
+                //// console.log("posdata", postdata);
                 sessionStorage.setItem("user-bio", JSON.stringify(postdata))
                 await addData(uid)
                 window.location.href = "login.html"
