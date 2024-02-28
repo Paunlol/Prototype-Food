@@ -278,11 +278,12 @@
             };
             let userdata = JSON.parse(sessionStorage.getItem("user-info"))
             //// console.log("userdata", userdata);
-            let usertext = document.getElementById('username-text')
-            usertext.innerHTML = userdata.displayName
+
             document.addEventListener('DOMContentLoaded', async () => {
                 await checkuserdata()
             })
+            let usertext = document.getElementById('username-text')
+            usertext.innerHTML = userdata.displayName
             const app = initializeApp(firebaseConfig);
             const db = getFirestore(app);
             const getData = await getDocs(collection(db, userdata.uid));
