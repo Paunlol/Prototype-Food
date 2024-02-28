@@ -352,8 +352,7 @@
 
         let userdata = JSON.parse(sessionStorage.getItem("user-info"))
         //// console.log("userdata", userdata);
-        let usertext = document.getElementById('username-text')
-        usertext.innerHTML = userdata.displayName
+
 
         document.addEventListener('DOMContentLoaded', async () => {
             await checkuserdata()
@@ -363,6 +362,10 @@
             // console.log('Page is ready to use!');
             // ทำสิ่งที่คุณต้องการทำหลังจากเว็บพร้อมใช้งาน
         });
+
+        let usertext = document.getElementById('username-text')
+        usertext.innerHTML = userdata.displayName
+
         const firebaseConfig = {
             apiKey: "AIzaSyBJMwXm9sPITs4vL8VcQl6sb6eqQbuvzuM",
             authDomain: "kinraidee-32dc4.firebaseapp.com",
@@ -410,6 +413,7 @@
         const lunch_time = document.getElementById('lunch-time')
         const diner_time = document.getElementById('diner-time')
         let postdata = {}
+        let rate = 0
 
 
         async function addfood() {
@@ -425,7 +429,8 @@
                     fat: postdata.fat,
                     name: postdata.name,
                     protein: postdata.protein,
-                    kcal: postdata.kcal
+                    kcal: postdata.kcal,
+                    rate: rate
                 });
                 alert('Breakfast Time data saved successfully.');
                 location.reload();
@@ -435,7 +440,9 @@
                     fat: postdata.fat,
                     name: postdata.name,
                     protein: postdata.protein,
-                    kcal: postdata.kcal
+                    kcal: postdata.kcal,
+                    rate: rate
+
                 });
                 alert('Lunch Time data saved successfully.');
                 location.reload();
@@ -445,7 +452,8 @@
                     fat: postdata.fat,
                     name: postdata.name,
                     protein: postdata.protein,
-                    kcal: postdata.kcal
+                    kcal: postdata.kcal,
+                    rate: rate
                 });
                 alert('Diner Time data saved successfully.');
                 location.reload();
@@ -481,14 +489,15 @@
             // เลือกไฟล์รูปภาพ
             const inputElement = document.getElementById('input-file');
             const URL = 'https://teachablemachine.withgoogle.com/models/tz989cxYn/';
+            console.log("URL", URL);
             const model = await tmImage.load(URL + 'model.json', URL + 'metadata.json');
-            //// console.log("model", model);
-            //// console.log("เรียกใช้ Teachable Machine model");
+            // console.log("model", model);
+            // console.log("เรียกใช้ Teachable Machine model");
             // ให้ผู้ใช้เลือกรูปภาพเมื่อคลิกที่ไฟล์
             inputElement.addEventListener('change', handleImageUpload);
 
             async function handleImageUpload() {
-                // //// console.log("asdasdasdasdasdasd");
+                // console.log("asdasdasdasdasdasd");
                 const file = event.target.files[0];
                 if (file) {
                     const reader = new FileReader();
@@ -496,11 +505,11 @@
                         const image = new Image();
                         image.src = e.target.result;
                         const imagePreview = image.src
-                        // //// console.log("imagePreview", imagePreview);
-                        // //// console.log("image.src", image.src);
+                        //  console.log("imagePreview", imagePreview);
+                        // console.log("image.src", image.src);
                         image.onload = async function () {
                             const prediction = await model.predict(image);
-                            // //// console.log("prediction", prediction); //ค่า predi ยังคงเป็นค่าคำสั่ง
+                            // console.log("prediction", prediction); //ค่า predi ยังคงเป็นค่าคำสั่ง
                             displayResult(prediction, imagePreview);
                         };
                     };
@@ -544,6 +553,8 @@
                 // //// console.log(items);
                 resultfood = items[0]
                 // //// console.log("resultfood", resultfood);
+                rate = parseFloat(items[0].rate)
+                console.log("rate", rate);
                 getColor(items[0].rate)
                 const newItems = items.map((item) => {
                     // //// console.log("itemasd",item);

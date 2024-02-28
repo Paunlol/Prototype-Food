@@ -73,21 +73,24 @@ async function addData(name) {
             fat: 0,
             kcal: 0,
             name: "",
-            protein: 0
+            protein: 0,
+            rate: 0
         })
         await setDoc(userDocRef5, {
             carb: 0,
             fat: 0,
             kcal: 0,
             name: "",
-            protein: 0
+            protein: 0,
+            rate: 0
         })
         await setDoc(userDocRef6, {
             carb: 0,
             fat: 0,
             kcal: 0,
             name: "",
-            protein: 0
+            protein: 0,
+            rate: 0
         })
         //// console.log("savedata");
     } else {
