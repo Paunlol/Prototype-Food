@@ -119,7 +119,6 @@
 
             signInWithEmailAndPassword(auth, email.value, password.value)
                 .then(async (credentials) => {
-                    //// console.log(credentials.user);
                     sessionStorage.setItem("user-info", JSON.stringify({
                         accessToken: credentials.user.accessToken,
                         displayName: credentials.user.displayName,
@@ -129,8 +128,6 @@
                 })
                 .catch((error) => {
                     alert(error.message)
-                    //// console.log(error.code);
-                    //// console.log(error.message);
                 })
         }
         MainForm.addEventListener('submit', SingInUser)
