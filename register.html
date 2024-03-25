@@ -125,14 +125,10 @@
                     sessionStorage.setItem("uid", JSON.stringify(credentials.user.uid))
                     addData(credentials.user.uid)
                     window.location.href = "BMIFirst.html"
-                    // //// console.log(credentials);
-                    // //// console.log(credentials.user.uid);
 
                 })
                 .catch((error) => {
                     alert(error.message);
-                    //// console.log(error.code);
-                    //// console.log(error.message);
                 })
         }
 
